@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState, useEffect} from 'react';
 
 function App() {
+  const [data, setData] = useState([{}]);
+  useEffect(() => {
+    fetch("/members")
+    .then(res => res.json())
+    .then(data => {
+      setData(data);
+      console.log(data);
+    })
+  }, [])
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+}
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {data.members?.map((member, i) => {
+        return <p key={i}>{member}</p>;
+      })}
+
+      <form onSubmit={handleSubmit} method='post'>
+        <input type="text" id='startPlace' />
+        <br></br>
+        <input type="text" id='endPlace' />
+        <br></br>
+        <input type='submit' value='submit' />
+      </form>
     </div>
+
   );
 }
 
