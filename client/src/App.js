@@ -8,10 +8,12 @@ import {
   Autocomplete,
   DirectionsRenderer,
 } from '@react-google-maps/api'
+
 import { useRef, useState } from 'react'
 
 // the center Marker at the beginning
-const center = { lat: 47.625168, lng: -122.337751 }
+const center = { lat: 47.625168, lng: -122.337751 };
+const lib = ['places'];
 
 function App() {
   const [map, setMap] = useState(/** @type google.maps.Map */ (null))
@@ -24,8 +26,6 @@ function App() {
   /** @type React.MutableRefObject<HTMLInputElement> */
   const destiantionRef = useRef()
 
-  const lib = ['places'];
-
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries: lib,
@@ -36,9 +36,10 @@ function App() {
     return <SkeletonText />
   }
 
-
   async function showRoute() {
-    if (originRef.current.value === '' || destiantionRef.current.value === '') {
+    const origin = originRef.current.value;
+    const destination = destiantionRef.current.value;
+    if (origin === '' || destination === '') {
       return
     }
     // eslint-disable-next-line no-undef
@@ -52,6 +53,20 @@ function App() {
     setDirectionsResponse(results)
     setDistance(results.routes[0].legs[0].distance.text)
     setDuration(results.routes[0].legs[0].duration.text)
+
+    // send data to backend
+    console.log(origin, destination);
+    fetch("/postData", {
+      method: "POST",
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        start: origin,
+        end: destination,
+      })
+    })
+    .then(res => res.json())
   }
 
   function clearRoute() {
@@ -63,13 +78,7 @@ function App() {
   }
 
   return (
-    <Flex
-      position='relative'
-      flexDirection='column'
-      alignItems='center'
-      h='100vh'
-      w='100vw'
-    >
+    <Flex position='relative' flexDirection='column' alignItems='center' h='100vh' w='100vw'>
       <Box position='absolute' left={0} top={0} h='100%' w='100%'>
         {/* Google Map Box */}
         <GoogleMap
