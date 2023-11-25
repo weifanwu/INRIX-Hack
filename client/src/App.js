@@ -15,7 +15,7 @@ import { useRef, useState } from 'react'
 const center = { lat: 47.625168, lng: -122.337751 };
 const lib = ['places'];
 
-function App() {
+function Test() {
   const [map, setMap] = useState(/** @type google.maps.Map */ (null))
   const [directionsResponse, setDirectionsResponse] = useState(null)
   const [distance, setDistance] = useState('')
@@ -146,4 +146,4 @@ function App() {
   )
 }
 
-export default App
+export default Test
