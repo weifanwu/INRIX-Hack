@@ -43,16 +43,18 @@ function App() {
     // console.log(lat, lng);
 
     // test for fetch a geocoder information
-    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=${API_KEY}`, {
+    // `https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=${API_KEY}
+    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=Space+Needle,+Broad+Street,+Seattle,+WA&key=${API_KEY}`, {
       method: "GET"
     }).then((res => res.json()))
     .then(data => {
-      console.log(data.results[0].geometry.location);
+      console.log(data.results[0]);
       const lat = data.results[0].geometry.location.lat;
       const lng = data.results[0].geometry.location.lng;
       console.log(lat, lng);
     })
     .catch((err) => console.log(err))
+
 
     await showRoute()
     setView(1);
