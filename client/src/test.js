@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import './App.css';
 import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer } from '@react-google-maps/api'
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Button } from '@mui/material';
 
 // the center Marker at the beginning
 const center = { lat: 47.625168, lng: -122.337751 };
@@ -18,7 +18,7 @@ function App() {
   const destiantionRef = useRef()
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: process.env.REACT_APP_MAPS_API_KEY,
     libraries: lib,
   })
 
@@ -34,7 +34,7 @@ function App() {
     const destination = destiantionRef.current.value;
     console.log(origin, destination);
 
-    // await showRoute()
+    await showRoute()
     setView(1);
     console.log("test submit!")
   }
@@ -73,18 +73,27 @@ function App() {
   return (
     <div>
     { view === 0 ?
-      <div className='post-form'>
-        <form onSubmit={handleSubmit} method='post'>
+      <div className='form-part'>
+        <h1>Create Your Post Here!</h1>
+        <form onSubmit={handleSubmit} method='post' className='post-form'>
+          <label>Origin:</label>
           <Autocomplete>
-          <input type="text" name="start" placeholder='Origin' ref={originRef}/>
+          <input type="text" name="start" ref={originRef}/>
           </Autocomplete>
-          <br></br>
+
+          <label>Destination:</label>
           <Autocomplete>
-          <input type="text" name="end" placeholder='Destination' ref={destiantionRef} />
+          <input type="text" name="end" ref={destiantionRef} />
           </Autocomplete>
-          <br></br>
-          <input type='submit' value='submit' />
-      </form>
+
+          <label htmlFor='date'>Date:</label>
+          <input type="date" name="time" id="date" />
+
+          <label htmlFor='date'>Content:</label>
+          <input type="text" name="end" id='content'/>
+
+          <Button type="submit" className="form-btn">Submit</Button>
+        </form>
       </div>
       :
       <div className='show-map'>
