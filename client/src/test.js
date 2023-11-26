@@ -2,11 +2,12 @@ import React, { useState, useRef } from 'react';
 import './App.css';
 import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer } from '@react-google-maps/api'
 import { CircularProgress, Button } from '@mui/material';
-
+// import { getGeocode, getLatLng } from 'use-places-autocomplete'
 
 // the center Marker at the beginning
 const center = { lat: 47.625168, lng: -122.337751 };
 const lib = ['places'];
+const API_KEY = process.env.REACT_APP_MAPS_API_KEY;
 
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
   const destiantionRef = useRef()
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_MAPS_API_KEY,
+    googleMapsApiKey: API_KEY,
     libraries: lib,
   })
 
@@ -31,9 +32,27 @@ function App() {
   // A function to handle submission of a post
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const origin = originRef.current.value;
     const destination = destiantionRef.current.value;
     console.log(origin, destination);
+
+    // convert address to la/ln
+    // const originData = await getGeocode(origin);
+    // const {lat, lng} = await getLatLng(originData[0]);
+    // console.log(lat, lng);
+
+    // test for fetch a geocoder information
+    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=${API_KEY}`, {
+      method: "GET"
+    }).then((res => res.json()))
+    .then(data => {
+      console.log(data.results[0].geometry.location);
+      const lat = data.results[0].geometry.location.lat;
+      const lng = data.results[0].geometry.location.lng;
+      console.log(lat, lng);
+    })
+    .catch((err) => console.log(err))
 
     await showRoute()
     setView(1);
@@ -98,7 +117,7 @@ function App() {
       </div>
       :
       <div className='show-map'>
-        <h1>Show Maps</h1>
+        <h1>Find and Match Your Post!</h1>
         <GoogleMap
           center={center}
           zoom={15}
