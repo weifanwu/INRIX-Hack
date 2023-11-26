@@ -1,3 +1,7 @@
+.all {
+  background-color: antiquewhite;
+}
+
 .form-part {
   display: flex;
   flex-direction: column;

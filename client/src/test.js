@@ -3,6 +3,7 @@ import './App.css';
 import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer } from '@react-google-maps/api'
 import { CircularProgress, Button } from '@mui/material';
 
+
 // the center Marker at the beginning
 const center = { lat: 47.625168, lng: -122.337751 };
 const lib = ['places'];
@@ -71,7 +72,7 @@ function App() {
   }
 
   return (
-    <div>
+    <div className='all'>
     { view === 0 ?
       <div className='form-part'>
         <h1>Create Your Post Here!</h1>
