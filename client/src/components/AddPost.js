@@ -57,39 +57,62 @@ function App(props) {
 
 
     await showRoute()
-    setView(1);
-    console.log("test submit!")
-
+    navigate("/map");
   }
 
   async function showRoute() {
     const origin = originRef.current.value;
     const destination = destiantionRef.current.value;
+  
     if (origin === '' || destination === '') {
-      return
+      return;
     }
+  
     // eslint-disable-next-line no-undef
-    const directionsService = new google.maps.DirectionsService()
-    const results = await directionsService.route({
-      origin: originRef.current.value,
-      destination: destiantionRef.current.value,
-      // eslint-disable-next-line no-undef
-      travelMode: google.maps.TravelMode.DRIVING,
-    })
-    props.setDirections(results)
-    navigate("/map");
-
-    fetch("/postData", {
-      method: "POST",
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify({
+    const directionsService = new google.maps.DirectionsService();
+  
+    try {
+      const results = await directionsService.route({
+        origin: origin,
+        destination: destination,
+        // eslint-disable-next-line no-undef
+        travelMode: google.maps.TravelMode.DRIVING,
+      });
+  
+      // Assuming that props.setDirections is a function that sets directions in the parent component
+      props.setDirections(results);
+  
+      console.log("JSON data:");
+      console.log(JSON.stringify({
         start: origin,
         end: destination,
-      })
-    })
-    .then(res => res.json())
+      }));
+  
+      // Send data to the Flask server
+      const response = await fetch("/postData", {
+        credentials: 'include',
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',  
+        },
+        body: JSON.stringify({
+          start: origin,
+          end: destination,
+        }),
+      });
+  
+      // Check if the fetch was successful
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log("Response from server:");
+        console.log(responseData);
+      } else {
+        // Handle errors if the fetch was not successful
+        console.log("Error:", response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   }
 
   return (
