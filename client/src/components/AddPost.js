@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import '../App.css';
-import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer } from '@react-google-maps/api'
+import { useJsApiLoader, Autocomplete } from '@react-google-maps/api'
 import { CircularProgress, Button } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 
