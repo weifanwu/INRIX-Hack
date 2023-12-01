@@ -3,16 +3,23 @@ from flask_cors import CORS
 
 # create the app instance
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
 
 @app.route('/')
 def index():
     return "<h1 > Home Page </hi>"
 
+
 @app.route('/postData', methods=['POST'])
 def postData():
     data = request.get_json()
     print(data['start'], data['end'])
+
+    print("End: " + str(data['end']))
+    print("Start: " + str(data['start']))
+    print("Date: " + data['date'])
+    print("Content: " + data['content'])
+
     return {"response": 'success'}
 
 """
