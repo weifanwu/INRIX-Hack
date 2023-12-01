@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer } from '@react-google-maps/api'
 import { useLocation } from 'react-router-dom';
+import { InfoWindow } from "@react-google-maps/api";
 
 
 export default function Map(props) {
@@ -8,6 +9,10 @@ export default function Map(props) {
     let location = useLocation();
 
     const [map, setMap] = useState(/** @type google.maps.Map */ (null))
+    const [selectedMarker, setSelectedMarker] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [start, setStart] = useState();
+
 
     // Get all nearest posts from backend later
     // set up new posts data for testing multiple markers
@@ -60,26 +65,42 @@ export default function Map(props) {
     testGetData();
 
     return (
-        <div className='show-map'>
+      <div className='show-map'>
         <h1>Find and Match Your Post!</h1>
         <GoogleMap
-          center={center}
-          zoom={15}
-          mapContainerStyle={{ width: '1000px', height: '1000px' }}
-          options={{
-            // in order to do not show unuseful information
-            zoomControl: false,
-            streetViewControl: false,
-            mapTypeControl: false,
-            fullscreenControl: false,
+      center={center}
+      zoom={15}
+      mapContainerStyle={{ width: '1000px', height: '1000px' }}
+      options={{
+        zoomControl: false,
+        streetViewControl: false,
+        mapTypeControl: false,
+        fullscreenControl: false,
+      }}
+      onLoad={(map) => setMap(map)}
+    >
+      {/* <Marker position={center} /> */}
+      {posts.map((object, i) => (
+        <Marker
+          key={i}
+          position={object.start}
+          onClick={() => {
+            setStart(object.start);
+            setOpen(true);
           }}
-          onLoad={map => setMap(map)}
-          >
-          <Marker position={center} />
-          {/* fetch the posts data */}
-          {posts.map((object, i) => <Marker position={object.start} key={i} />)}
-          <DirectionsRenderer directions={props.directions} />
-        </GoogleMap>
+        />
+      ))}
+      <DirectionsRenderer directions={props.directions} />
+      {open && (
+        <InfoWindow position={start} onCloseClick={() => setOpen(false)}>
+          <div style={{ width: '200px', height: '100px' }}>
+            <p>It's a start position!</p>
+            <button>Start Chat</button>
+          </div>
+        </InfoWindow>
+      )}
+    </GoogleMap>
+        
       </div>
-    )
+    );
 }
