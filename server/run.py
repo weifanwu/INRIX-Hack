@@ -7,7 +7,7 @@ app = create_app('development')
 
 # -------- Server Deployment Configuration -------- #
 HOST = '127.0.0.1'
-PORT = 7080
+PORT = 5000
 # -------------------------------------------------------- #
 
 if __name__ == '__main__':
