@@ -1,5 +1,5 @@
-from flask import Flask, request
-# from flask_cors import CORS
+from flask import Flask, request, json, jsonify
+from flask_cors import CORS
 
 # create the app instance
 app = Flask(__name__)
@@ -44,12 +44,34 @@ post_data = {
 }
 """
 
-@app.route('/getPost', methods=['GET'])
-def getPost():
+@app.route('/testGetPost', methods=['GET'])
+def testGetPost():
     # get all post data from database
     # find the nearest posts for start and end position
     # try to print information
-    pass
+    data = [
+        {
+            "post_id": 1,
+            "start": [47.625168, -122.337751],
+            "end": [47.618956, -122.344144]
+        },
+        {
+            "post_id": 2,
+            "start": [47.625168, -122.337751],
+            "end": [47.613086, -122.347959]
+        },
+    ]
+    return jsonify(data)
+    # return json.dumps(data)
+
+@app.route('/json')
+def send_json():
+    data = {
+        "name": "John",
+        "age": 30,
+        "city": "New York"
+    }
+    return json.dumps(data)
 
 if __name__ == '__main__':
     app.run(debug = True)   # developer mode
