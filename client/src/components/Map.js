@@ -2,6 +2,18 @@ import React, {useState} from "react";
 import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer } from '@react-google-maps/api'
 import { useLocation } from 'react-router-dom';
 import { InfoWindow } from "@react-google-maps/api";
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import CardHeader from '@mui/material/CardHeader';
+import Avatar from '@mui/material/Avatar';
+import { red } from '@mui/material/colors';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import SendIcon from '@mui/icons-material/Send';
 
 
 export default function Map(props) {
@@ -93,10 +105,45 @@ export default function Map(props) {
       <DirectionsRenderer directions={props.directions} />
       {open && (
         <InfoWindow position={start} onCloseClick={() => setOpen(false)}>
-          <div style={{ width: '200px', height: '100px' }}>
+          {/* <div style={{ width: '200px', height: '100px' }}>
             <p>It's a start position!</p>
             <button>Start Chat</button>
-          </div>
+          </div> */}
+          <Card sx={{ maxWidth: 345 }}>
+            <CardHeader
+              avatar={
+                <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                  R
+                </Avatar>
+              }
+              // action={
+              //   <IconButton aria-label="settings">
+              //     <MoreVertIcon />
+              //   </IconButton>
+              // }
+              title="Shrimp and Chorizo Paella"
+              subheader="September 14, 2016"
+            />
+            {/* <CardMedia
+              component="img"
+              alt="green iguana"
+              height="140"
+              image="/static/images/cards/contemplative-reptile.jpg"
+            /> */}
+            <CardContent>
+              {/* <Typography gutterBottom variant="h5" component="div">
+                Lizard
+              </Typography> */}
+              <Typography variant="body2" color="text.secondary">
+                Lizards are a widespread group of squamate reptiles, with over 6,000
+                species, ranging across all continents except Antarctica
+              </Typography>
+            </CardContent>
+            <CardActions style={{ display: 'flex', justifyContent: 'center' }}>
+              <Button variant="contained" endIcon={<SendIcon/>}>Chat</Button>
+              {/* <Button size="small">Learn More</Button> */}
+            </CardActions>
+          </Card>
         </InfoWindow>
       )}
     </GoogleMap>
