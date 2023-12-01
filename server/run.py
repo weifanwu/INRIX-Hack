@@ -1,16 +1,25 @@
 from flask import request
-
+from flask_socketio import SocketIO, emit
 from app import create_app, db
-# from flask_migrate import Migrate
 
 app = create_app('development')
+socketio = SocketIO(app, cors_allowed_origins="*")
 
-# -------- Server Deployment Configuration -------- #
-HOST = '127.0.0.1'
-PORT = 5000
-# -------------------------------------------------------- #
+# Your models and routes go here...
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+    emit("connected")
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
+
+@socketio.on('message')
+def handle_message(message):
+    print('Received message:', message)
+    emit('message', message, broadcast=True)
 
 if __name__ == '__main__':
-    # app.run(host=HOST, port=PORT, debug=True, ssl_context='adhoc')
-    app.run(host=HOST, port=PORT, debug=True)
-    
+    # Use socketio.run instead of app.run
+    socketio.run(app, debug=True)
