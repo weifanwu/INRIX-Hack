@@ -1,7 +1,6 @@
 from datetime import datetime
 
-from flask import render_template, request, jsonify, current_app, session, redirect, url_for, flash
-from flask import render_template, request, jsonify, current_app, redirect, url_for, session
+from flask import Flask, request, json, jsonify
 from sqlalchemy import desc
 from app import db
 from app.models import User, Rider
@@ -28,6 +27,12 @@ def index():
 def postData():
     data = request.get_json()
     print(data['start'], data['end'])
+
+    print("End: " + str(data['end']))
+    print("Start: " + str(data['start']))
+    print("Date: " + data['date'])
+    print("Content: " + data['content'])
+
     return {"response": 'success'}
 
 """
@@ -52,15 +57,31 @@ post_data = {
 }
 """
 
-@main.route('/getPost', methods=['GET'])
-def getPost():
+@main.route('/testGetPost', methods=['GET'])
+def testGetPost():
     # get all post data from database
     # find the nearest posts for start and end position
     # try to print information
-    posts = Rider.query.all()
-    post_list = []
-    for post in posts:
-        post_dic = dict(id=post.id, start=post.start, end=post.end, time=post.time)
-        post_list.append(post_dic)
-    print(post_list)
+    data = [
+        {
+            "post_id": 1,
+            "start": [47.625168, -122.337751],
+            "end": [47.618956, -122.344144]
+        },
+        {
+            "post_id": 2,
+            "start": [47.625168, -122.337751],
+            "end": [47.613086, -122.347959]
+        },
+    ]
+    return jsonify(data)
+    # return json.dumps(data)
 
+@main.route('/json')
+def send_json():
+    data = {
+        "name": "John",
+        "age": 30,
+        "city": "New York"
+    }
+    return json.dumps(data)
