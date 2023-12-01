@@ -1,20 +1,38 @@
-from flask import Flask
-from flask_cors import CORS
-from flask_socketio import SocketIO, emit
+from datetime import datetime
 
-# create the app instance
-app = Flask(__name__)
-socketio = SocketIO(app,cors_allowed_origins="*")
-CORS(app)
+from flask import Flask, request, json, jsonify
+from sqlalchemy import desc
+from app import db
+from app.models import User, Rider
+from config import Config
+from . import main
 
-@app.route('/')
+
+@main.route('/')
 def index():
+    db.drop_all()
+    db.create_all()
+    u1 = User(id=1, email="test@gmail.com", username="test", gender="non-binary", age=18, city="Seattle", mbti="REST")
+    r1 = Rider(id=1, start=-33.8, end=442.5, content="Travel", time=datetime.utcnow(), user_id=1)
+    r2 = Rider(id=2, start=-33.8, end=442.5, content="Travel", time=datetime.utcnow(), user_id=1)
+    r3 = Rider(id=3, start=-33.8, end=442.5, content="Travel", time=datetime.utcnow(), user_id=1)
+    db.session.add(u1)
+    db.session.add(r1)
+    db.session.add(r2)
+    db.session.add(r3)
+    db.session.commit()
     return "<h1 > Home Page </hi>"
 
-@app.route('/postData', methods=['POST'])
+@main.route('/postData', methods=['POST'])
 def postData():
     data = request.get_json()
     print(data['start'], data['end'])
+
+    print("End: " + str(data['end']))
+    print("Start: " + str(data['start']))
+    print("Date: " + data['date'])
+    print("Content: " + data['content'])
+
     return {"response": 'success'}
 
 """
@@ -39,7 +57,7 @@ post_data = {
 }
 """
 
-@app.route('/testGetPost', methods=['GET'])
+@main.route('/testGetPost', methods=['GET'])
 def testGetPost():
     # get all post data from database
     # find the nearest posts for start and end position
@@ -59,7 +77,7 @@ def testGetPost():
     return jsonify(data)
     # return json.dumps(data)
 
-@app.route('/json')
+@main.route('/json')
 def send_json():
     data = {
         "name": "John",
@@ -67,20 +85,3 @@ def send_json():
         "city": "New York"
     }
     return json.dumps(data)
-
-@socketio.on('connect')
-def handle_connect():
-    print('Client connected')
-    emit("connected")
-
-@socketio.on('disconnect')
-def handle_disconnect():
-    print('Client disconnected')
-
-@socketio.on('message')
-def handle_message(message):
-    print('Received message:', message)
-    emit('message', message, broadcast=True)
-
-if __name__ == '__main__':
-    socketio.run(app, debug=True)
