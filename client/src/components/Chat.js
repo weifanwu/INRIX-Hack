@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-// import { io } from "socket.io-client";
+import { io } from "socket.io-client";
 import styled from "styled-components";
 import ChatContainer from "./ChatContainer.js";
 import Contacts from "./Contacts.js";
@@ -10,10 +10,36 @@ import Welcome from "./Welcome.js";
 export default function Chat() {
   const allUsersRoute = "";
   const host = "";
-  const socket = useRef();
   const [contacts, setContacts] = useState([]);
   const [currentChat, setCurrentChat] = useState(undefined);
   const [currentUser, setCurrentUser] = useState(undefined);
+  const [currentSocket, setSocket] = useState(undefined);
+
+  useEffect(() => {
+    const socket = io('http://127.0.0.1:5000', {
+      transports: ['websocket'],
+      cors: {
+        origin: 'http://localhost:3000/',
+      },
+    });
+
+    socket.on('connect', (data) => {
+      console.log("connected to the server...");
+      socket.emit('message', "this is one of the message");
+    });
+  
+    socket.on('message', (message) => {
+      console.log('Received message:', message);
+    });
+
+    setSocket(socket);
+
+    // Clean up the socket connection on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   useEffect(async () => {
     if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
     } else {
@@ -43,6 +69,11 @@ export default function Chat() {
   const handleChatChange = (chat) => {
     setCurrentChat(chat);
   };
+
+  const sendMessage = (message) => {
+    currentSocket.emit("message", message);
+  }
+
   return (
     <>
       <Container>
@@ -51,7 +82,7 @@ export default function Chat() {
           {/* {currentChat === undefined ? (
             <Welcome />
           ) : ( */}
-            <ChatContainer currentChat={currentChat} socket={socket} />
+            <ChatContainer currentChat={currentChat} sendMessage={sendMessage}/>
           {/* )} */}
         </div>
       </Container>

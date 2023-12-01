@@ -4,7 +4,7 @@ import ChatInput from "./ChatInput.js";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
-export default function ChatContainer({ currentChat, socket }) {
+export default function ChatContainer({ currentChat, currentSocket }) {
   const sendMessageRoute = "";
   const recieveMessageRoute = "";
   const [messages, setMessages] = useState([]);
@@ -95,7 +95,7 @@ export default function ChatContainer({ currentChat, socket }) {
               </div>
             </div>
       </div>
-      <ChatInput handleSendMsg={handleSendMsg} />
+      <ChatInput handleSendMsg={handleSendMsg} currentSocket={currentSocket} />
     </Container>
   );
 }

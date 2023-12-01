@@ -1,8 +1,10 @@
-from flask import Flask, request, json, jsonify
+from flask import Flask
 from flask_cors import CORS
+from flask_socketio import SocketIO, emit
 
 # create the app instance
 app = Flask(__name__)
+socketio = SocketIO(app,cors_allowed_origins="*")
 CORS(app)
 
 @app.route('/')
@@ -66,5 +68,19 @@ def send_json():
     }
     return json.dumps(data)
 
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+    emit("connected")
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
+
+@socketio.on('message')
+def handle_message(message):
+    print('Received message:', message)
+    emit('message', message, broadcast=True)
+
 if __name__ == '__main__':
-    app.run(debug = True)   # developer mode
+    socketio.run(app, debug=True)
