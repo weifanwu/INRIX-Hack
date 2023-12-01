@@ -29,16 +29,17 @@ export default function ChatInput({ handleSendMsg, currentSocket }) {
             hi
         </div>
       </div>
-      <form className="input-container" onSubmit={(event) => sendChat(event)}>
         <input
           type="text"
           placeholder="type your message here"
           onChange={(e) => setMsg(e.target.value)}
           value={msg}
         />
-        <button type="submit">
+        <button onClick={() => {
+          handleSendMsg(msg);
+        }}>
+          Send Message
         </button>
-      </form>
     </Container>
   );
 }

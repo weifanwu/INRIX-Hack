@@ -6,6 +6,7 @@ import styled from "styled-components";
 import ChatContainer from "./ChatContainer.js";
 import Contacts from "./Contacts.js";
 import Welcome from "./Welcome.js";
+import socket from "../utils/socket.js";
 
 export default function Chat() {
   const allUsersRoute = "";
@@ -13,15 +14,10 @@ export default function Chat() {
   const [contacts, setContacts] = useState([]);
   const [currentChat, setCurrentChat] = useState(undefined);
   const [currentUser, setCurrentUser] = useState(undefined);
-  const [currentSocket, setSocket] = useState(undefined);
+  const [currentSocket, setSocket] = useState(null);
 
   useEffect(() => {
-    const socket = io('http://127.0.0.1:5000', {
-      transports: ['websocket'],
-      cors: {
-        origin: 'http://localhost:3000/',
-      },
-    });
+
 
     socket.on('connect', (data) => {
       console.log("connected to the server...");
@@ -32,12 +28,6 @@ export default function Chat() {
       console.log('Received message:', message);
     });
 
-    setSocket(socket);
-
-    // Clean up the socket connection on component unmount
-    return () => {
-      socket.disconnect();
-    };
   }, []);
 
   useEffect(async () => {

@@ -3,13 +3,13 @@ import styled from "styled-components";
 import ChatInput from "./ChatInput.js";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import socket from "../utils/socket.js";
 
 export default function ChatContainer({ currentChat, currentSocket }) {
   const sendMessageRoute = "";
   const recieveMessageRoute = "";
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
-  const [arrivalMessage, setArrivalMessage] = useState(null);
 
   // useEffect(async () => {
   //   const data = await JSON.parse(
@@ -32,16 +32,23 @@ export default function ChatContainer({ currentChat, currentSocket }) {
   //   };
   //   getCurrentChat();
   // }, [currentChat]);
+  socket.on('message', (arrivalMessage) => {
+    setMessages([...messages, arrivalMessage.msg]);
+    console.log("this is the messages: ");
+    console.log(messages);
+  });
+  
 
   const handleSendMsg = async (msg) => {
     // const data = await JSON.parse(
     //   localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
     // );
-    // socket.current.emit("send-msg", {
-    //   to: currentChat._id,
-    //   from: data._id,
-    //   msg,
-    // });
+    socket.emit("message", {
+      name: "weifan",
+      to: 2,
+      from: 1,
+      msg,
+    });
     // await axios.post(sendMessageRoute, {
     //   from: data._id,
     //   to: currentChat._id,
@@ -85,17 +92,21 @@ export default function ChatContainer({ currentChat, currentSocket }) {
         </div>
       </div>
       <div className="chat-messages">
-            <div ref={scrollRef} key={uuidv4()}>
-              <div
-                className={`message "recieved"`}
-              >
-                <div className="content ">
-                  <p>this is one of the message</p>
+        {messages.map((message) => {
+            return (
+              <div>
+                <div
+                  className={"message sended"}
+                >
+                  <div className="content ">
+                    <p>{message}</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            );
+          })}
       </div>
-      <ChatInput handleSendMsg={handleSendMsg} currentSocket={currentSocket} />
+      <ChatInput handleSendMsg={handleSendMsg} />
     </Container>
   );
 }
