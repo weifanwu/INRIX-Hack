@@ -24,6 +24,7 @@ export default function Map(props) {
     const [selectedMarker, setSelectedMarker] = useState(null);
     const [open, setOpen] = useState(false);
     const [start, setStart] = useState();
+    const [end, setEnd] = useState();
 
 
     // Get all nearest posts from backend later
@@ -98,6 +99,7 @@ export default function Map(props) {
           position={object.start}
           onClick={() => {
             setStart(object.start);
+            setEnd(object.end);
             setOpen(true);
           }}
         />
@@ -105,10 +107,6 @@ export default function Map(props) {
       <DirectionsRenderer directions={props.directions} />
       {open && (
         <InfoWindow position={start} onCloseClick={() => setOpen(false)}>
-          {/* <div style={{ width: '200px', height: '100px' }}>
-            <p>It's a start position!</p>
-            <button>Start Chat</button>
-          </div> */}
           <Card sx={{ maxWidth: 345 }}>
             <CardHeader
               avatar={
@@ -116,32 +114,25 @@ export default function Map(props) {
                   R
                 </Avatar>
               }
-              // action={
-              //   <IconButton aria-label="settings">
-              //     <MoreVertIcon />
-              //   </IconButton>
-              // }
               title="Shrimp and Chorizo Paella"
               subheader="September 14, 2016"
             />
-            {/* <CardMedia
-              component="img"
-              alt="green iguana"
-              height="140"
-              image="/static/images/cards/contemplative-reptile.jpg"
-            /> */}
             <CardContent>
-              {/* <Typography gutterBottom variant="h5" component="div">
-                Lizard
-              </Typography> */}
               <Typography variant="body2" color="text.secondary">
-                Lizards are a widespread group of squamate reptiles, with over 6,000
-                species, ranging across all continents except Antarctica
+                <div>
+                  start latitude, longtitude: 
+                  {parseFloat(start['lat'].toFixed(3))},
+                  {parseFloat(start['lng'].toFixed(3))}
+                </div>
+                <div>
+                  end latitude, longtitude:
+                  {parseFloat(end['lat'].toFixed(3))},
+                  {parseFloat(end['lng'].toFixed(3))}
+                </div>
               </Typography>
             </CardContent>
             <CardActions style={{ display: 'flex', justifyContent: 'center' }}>
               <Button variant="contained" endIcon={<SendIcon/>}>Chat</Button>
-              {/* <Button size="small">Learn More</Button> */}
             </CardActions>
           </Card>
         </InfoWindow>
