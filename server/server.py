@@ -13,6 +13,7 @@ def index():
 @app.route('/postData', methods=['POST'])
 def postData():
     data = request.get_json()
+    print(data['start'], data['end'])
 
     print("End: " + str(data['end']))
     print("Start: " + str(data['start']))
