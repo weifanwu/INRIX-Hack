@@ -8,7 +8,7 @@ class Initialization:
     def db_initialization():
         db.drop_all()
         db.create_all()
-    
+
 
 class User(db.Model):
     __tablename__ = 'users'
