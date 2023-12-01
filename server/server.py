@@ -14,8 +14,8 @@ def index():
 def postData():
     data = request.get_json()
 
-    print("End: " + data['end'])
-    print("Start: " + data['start'])
+    print("End: " + str(data['end']))
+    print("Start: " + str(data['start']))
     print("Date: " + data['date'])
     print("Content: " + data['content'])
 
