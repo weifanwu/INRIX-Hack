@@ -91,12 +91,12 @@ def send_json():
 @cross_origin()
 def register():
     if request.method == 'OPTIONS':
-        return jsonify({"message": "预检请求成功"})
+        return jsonify({"message": "Prelight check successful"})
     data = request.json
     new_user = User(email=data['email'], password=data['password'])
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({"message": "注册成功"})
+    return jsonify({"message": "Sign Up Successful"})
 
 @main.route('/SignIn', methods=['POST', 'OPTIONS'])
 @cross_origin()
@@ -104,6 +104,6 @@ def login():
     data = request.json
     user = User.query.filter_by(email=data['email'], password=data['password']).first()
     if user:
-        return jsonify({"message": "登录成功"})
+        return jsonify({"message": "Sign In Successful"})
     else:
-        return jsonify({"message": "无效的用户名或密码"}), 401
+        return jsonify({"message": "Wrong Username or password"}), 401
