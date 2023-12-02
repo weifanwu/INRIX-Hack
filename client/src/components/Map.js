@@ -74,12 +74,6 @@ export default function Map(props) {
 
     testGetData();
 
-    const changeToChat = () => {
-      // change the route from /map to /chat
-      console.log("test chat");
-      navigate("/chat");
-    }
-
     return (
       <div className='show-map'>
         <h1>Find and Match Your Post!</h1>
@@ -135,12 +129,16 @@ export default function Map(props) {
               </Typography>
             </CardContent>
             <CardActions style={{ display: 'flex', justifyContent: 'center' }}>
-              <Button variant="contained" endIcon={<SendIcon/>}>Chat</Button>
-              {/* <Button size="small">Learn More</Button> */}
+              <Button variant="contained" endIcon={<SendIcon/>} onClick={() => {
+                // alert('clicked');
+                navigate("/chat")
+                console.log('test button print');
+              }}>Chat Test</Button>
             </CardActions>
           </Card>
         </InfoWindow>
       )}
+      {open && <DirectionsRenderer directions={props.directions} />}
     </GoogleMap>
 
       </div>
